@@ -61,7 +61,7 @@ function Post() {
           <img src={post.image} alt={post.title} className="w-full aspect-[16/9] object-cover" />
         </div>
         <div className="prose prose-lg mt-10 max-w-none">
-          {post.body.map((p, i) => (
+          {post.body.map((p: string, i: number) => (
             <p key={i} className="text-base leading-relaxed text-foreground/85 mb-5">{p}</p>
           ))}
         </div>
