@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Calendar, Clock, MapPin, MessageSquare, Phone, User, Sparkles } from "lucide-react";
+import { Check, X, Calendar, Clock, MapPin, MessageSquare, Phone, User, Sparkles, HelpCircle } from "lucide-react";
 
 const SERVICES_WINGS = [
   "Gruha Pravesam (Housewarming)",
@@ -19,6 +19,7 @@ export function BookingForm({
 }: {
   defaultService?: string;
 }) {
+  const [requestType, setRequestType] = useState<"booking" | "query">("booking");
   const [formData, setFormData] = useState({
     custName: "",
     custPhone: "",
@@ -41,6 +42,7 @@ export function BookingForm({
       const existing = JSON.parse(localStorage.getItem("bookings") || "[]");
       existing.push({
         ...formData,
+        requestType,
         submittedAt: new Date().toISOString(),
       });
       localStorage.setItem("bookings", JSON.stringify(existing));
@@ -48,8 +50,13 @@ export function BookingForm({
       // Simulate network request
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      toast.success("Booking Request Registered", {
-        description: "Our admin coordinator will review the slots and reach out shortly.",
+      const titleMessage = requestType === "booking" ? "Booking Request Registered" : "Inquiry Registered";
+      const descMessage = requestType === "booking" 
+        ? "Our admin coordinator will review the slots and reach out shortly."
+        : "Our team will review your query and connect back with you soon.";
+
+      toast.success(titleMessage, {
+        description: descMessage,
       });
 
       setShowModal(true);
@@ -78,6 +85,37 @@ export function BookingForm({
   return (
     <div className="relative">
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Request Type Selector (Segmented Tab) */}
+        <div className="space-y-2">
+          <label className="block text-xs font-semibold uppercase tracking-wider text-primary">
+            Request Type
+          </label>
+          <div className="grid grid-cols-2 p-1 gap-1 rounded-full bg-secondary">
+            <button
+              type="button"
+              onClick={() => setRequestType("booking")}
+              className={`rounded-full py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
+                requestType === "booking"
+                  ? "bg-[#b88e3e] text-white shadow-sm"
+                  : "text-muted-foreground hover:text-primary"
+              }`}
+            >
+              Puja Booking
+            </button>
+            <button
+              type="button"
+              onClick={() => setRequestType("query")}
+              className={`rounded-full py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
+                requestType === "query"
+                  ? "bg-[#b88e3e] text-white shadow-sm"
+                  : "text-muted-foreground hover:text-primary"
+              }`}
+            >
+              General Inquiry / Query
+            </button>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-5">
           {/* Name Field */}
           <div className="space-y-2">
@@ -142,15 +180,15 @@ export function BookingForm({
         </div>
 
         <div className="grid md:grid-cols-2 gap-5">
-          {/* Preferred Date Field */}
+          {/* Preferred Date Field (Required only for Bookings) */}
           <div className="space-y-2">
             <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
               <Calendar className="h-3.5 w-3.5 text-accent" />
-              Preferred Date <span className="text-accent">*</span>
+              Preferred Date {requestType === "booking" && <span className="text-accent">*</span>}
             </label>
             <input
               type="date"
-              required
+              required={requestType === "booking"}
               value={formData.bookDate}
               onChange={(e) => setFormData((prev) => ({ ...prev, bookDate: e.target.value }))}
               className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
@@ -172,15 +210,15 @@ export function BookingForm({
           </div>
         </div>
 
-        {/* Location Field */}
+        {/* Location Field (Required only for Bookings) */}
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
             <MapPin className="h-3.5 w-3.5 text-accent" />
-            City / Location <span className="text-accent">*</span>
+            City / Location {requestType === "booking" && <span className="text-accent">*</span>}
           </label>
           <input
             type="text"
-            required
+            required={requestType === "booking"}
             value={formData.bookLoc}
             onChange={(e) => setFormData((prev) => ({ ...prev, bookLoc: e.target.value }))}
             placeholder="e.g. Bangalore, Whitefield"
@@ -192,12 +230,16 @@ export function BookingForm({
         <div className="space-y-2">
           <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
             <MessageSquare className="h-3.5 w-3.5 text-accent" />
-            Special Requests (optional)
+            {requestType === "booking" ? "Special Requests (optional)" : "Your Inquiry Questions / Notes"}
           </label>
           <textarea
             value={formData.bookNotes}
             onChange={(e) => setFormData((prev) => ({ ...prev, bookNotes: e.target.value }))}
-            placeholder="Specify house size, required samagri adjustments..."
+            placeholder={
+              requestType === "booking" 
+                ? "Specify house size, required samagri adjustments..." 
+                : "Ask us anything about rituals, items needed, timings, or options..."
+            }
             rows={4}
             className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none resize-none"
           />
@@ -212,7 +254,9 @@ export function BookingForm({
             <span>Submitting...</span>
           ) : (
             <>
-              <span>🪔 Submit Booking Request</span>
+              <span>
+                {requestType === "booking" ? "🪔 Submit Booking Request" : "🪔 Submit Inquiry / Query"}
+              </span>
             </>
           )}
         </button>
@@ -252,15 +296,21 @@ export function BookingForm({
               </button>
 
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#b88e3e]/10 text-[#b88e3e]">
-                <span className="text-4xl">🙏</span>
+                {requestType === "booking" ? (
+                  <span className="text-4xl">🙏</span>
+                ) : (
+                  <HelpCircle className="h-8 w-8 text-[#b88e3e]" />
+                )}
               </div>
 
               <h3 className="font-serif text-2xl font-semibold text-primary">
-                Booking Registered!
+                {requestType === "booking" ? "Booking Registered!" : "Inquiry Registered!"}
               </h3>
               
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Your requests have been transmitted directly to our admin desk in the background. A priest will review the slots and connect back shortly.
+                {requestType === "booking" 
+                  ? "Your requests have been transmitted directly to our admin desk in the background. A priest will review the slots and connect back shortly."
+                  : "Your query has been transmitted to our administrative desk. Our team will review your questions and reach out shortly."}
               </p>
 
               <button
