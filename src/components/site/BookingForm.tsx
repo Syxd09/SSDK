@@ -56,6 +56,10 @@ export function BookingForm({
   const handleTimeChange = (type: "hour" | "minute" | "period", val: string) => {
     setTimeState((prev) => {
       const updated = { ...prev, [type]: val };
+      if (type === "hour") {
+        if (!updated.minute) updated.minute = "00";
+        if (!updated.period) updated.period = "AM";
+      }
       if (updated.hour && updated.minute && updated.period) {
         setFormData((form) => ({
           ...form,
@@ -267,55 +271,87 @@ export function BookingForm({
               </Popover>
             </div>
 
-            {/* Preferred Time Field (Three Inline Selects) */}
+            {/* Preferred Time Field (Popover Custom Time Picker) */}
             <div className="space-y-2">
               <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
                 <Clock className="h-3.5 w-3.5 text-accent" />
                 Preferred Time
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                <Select
-                  value={timeState.hour}
-                  onValueChange={(h) => handleTimeChange("hour", h)}
-                >
-                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
-                    <SelectValue placeholder="Hour" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md max-h-[200px] overflow-y-auto">
-                    {HOURS.map((h) => (
-                      <SelectItem key={h} value={h} className="cursor-pointer hover:bg-accent/10">{h}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-md border border-input bg-card px-4 py-3.5 text-sm text-left transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none cursor-pointer"
+                  >
+                    <span className={formData.bookTime ? "text-foreground" : "text-muted-foreground"}>
+                      {formData.bookTime ? formData.bookTime : "Select preferred time"}
+                    </span>
+                    <Clock className="h-4 w-4 opacity-50 text-accent" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-3 bg-card border border-border/80 shadow-2xl rounded-md flex flex-col gap-3" align="start">
+                  <div className="grid grid-cols-3 gap-2 text-center text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border/60 pb-1.5">
+                    <div>Hour</div>
+                    <div>Min</div>
+                    <div>AM/PM</div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1 h-40">
+                    {/* Hour Column */}
+                    <div className="overflow-y-auto pr-1 flex flex-col gap-0.5 scrollbar-thin">
+                      {HOURS.map((h) => (
+                        <button
+                          key={h}
+                          type="button"
+                          onClick={() => handleTimeChange("hour", h)}
+                          className={`rounded-sm py-1.5 text-xs font-medium text-center transition-all ${
+                            timeState.hour === h
+                              ? "bg-[#b88e3e] text-white"
+                              : "hover:bg-secondary text-foreground"
+                          }`}
+                        >
+                          {h}
+                        </button>
+                      ))}
+                    </div>
 
-                <Select
-                  value={timeState.minute}
-                  onValueChange={(m) => handleTimeChange("minute", m)}
-                >
-                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
-                    <SelectValue placeholder="Min" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md max-h-[200px] overflow-y-auto">
-                    {MINUTES.map((m) => (
-                      <SelectItem key={m} value={m} className="cursor-pointer hover:bg-accent/10">{m}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                    {/* Minute Column */}
+                    <div className="overflow-y-auto pr-1 flex flex-col gap-0.5 scrollbar-thin">
+                      {MINUTES.map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => handleTimeChange("minute", m)}
+                          className={`rounded-sm py-1.5 text-xs font-medium text-center transition-all ${
+                            timeState.minute === m
+                              ? "bg-[#b88e3e] text-white"
+                              : "hover:bg-secondary text-foreground"
+                          }`}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
 
-                <Select
-                  value={timeState.period}
-                  onValueChange={(p) => handleTimeChange("period", p)}
-                >
-                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
-                    <SelectValue placeholder="AM/PM" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md">
-                    {PERIODS.map((p) => (
-                      <SelectItem key={p} value={p} className="cursor-pointer hover:bg-accent/10">{p}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                    {/* Period Column */}
+                    <div className="flex flex-col gap-0.5">
+                      {PERIODS.map((p) => (
+                        <button
+                          key={p}
+                          type="button"
+                          onClick={() => handleTimeChange("period", p)}
+                          className={`rounded-sm py-1.5 text-xs font-medium text-center transition-all ${
+                            timeState.period === p
+                              ? "bg-[#b88e3e] text-white"
+                              : "hover:bg-secondary text-foreground"
+                          }`}
+                        >
+                          {p}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         )}
