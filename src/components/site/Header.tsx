@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, X, Flame } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -31,9 +31,11 @@ export function Header() {
     >
       <div className="container-x flex h-20 items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <span className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-md transition-transform group-hover:scale-105">
-            <Flame className="h-5 w-5 text-accent" />
-          </span>
+          <img
+            src="/logo.png"
+            alt="Sri Shankara Dharmika Kendra"
+            className="h-10 w-10 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
+          />
           <span className="flex flex-col leading-tight">
             <span className="font-serif text-lg font-semibold text-primary">
               Sri Shankara
