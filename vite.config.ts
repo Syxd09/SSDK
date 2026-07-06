@@ -15,6 +15,6 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   server: {
-    allowedHosts: ["all", ".ngrok-free.app", ".ngrok.io"],
+    allowedHosts: true,
   },
 });
