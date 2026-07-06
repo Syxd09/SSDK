@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Calendar, Clock, MapPin, MessageSquare, Phone, User, Sparkles, HelpCircle } from "lucide-react";
+import { Check, X, Calendar as CalendarIcon, Clock, MapPin, MessageSquare, Phone, User, Sparkles, HelpCircle } from "lucide-react";
+import { format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -9,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 const SERVICES_WINGS = [
   "Gruha Pravesam (Housewarming)",
@@ -20,6 +23,10 @@ const SERVICES_WINGS = [
   "Language / Scriptural Pooja Classes",
   "Other Custom Puja Requirement",
 ] as const;
+
+const HOURS = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+const MINUTES = ["00", "15", "30", "45"];
+const PERIODS = ["AM", "PM"];
 
 export function BookingForm({
   defaultService = "",
@@ -37,12 +44,44 @@ export function BookingForm({
     bookNotes: "",
   });
 
+  const [timeState, setTimeState] = useState({
+    hour: "",
+    minute: "",
+    period: "",
+  });
+
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const handleTimeChange = (type: "hour" | "minute" | "period", val: string) => {
+    setTimeState((prev) => {
+      const updated = { ...prev, [type]: val };
+      if (updated.hour && updated.minute && updated.period) {
+        setFormData((form) => ({
+          ...form,
+          bookTime: `${updated.hour}:${updated.minute} ${updated.period}`,
+        }));
+      } else {
+        setFormData((form) => ({
+          ...form,
+          bookTime: "",
+        }));
+      }
+      return updated;
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (requestType === "booking" && !formData.bookDate) {
+      toast.error("Preferred Date Required", {
+        description: "Please select a preferred date to secure your booking.",
+      });
+      setLoading(false);
+      return;
+    }
 
     try {
       // LocalStorage persistence matching existing structure
@@ -86,6 +125,11 @@ export function BookingForm({
       bookTime: "",
       bookLoc: "",
       bookNotes: "",
+    });
+    setTimeState({
+      hour: "",
+      minute: "",
+      period: "",
     });
   };
 
@@ -187,33 +231,91 @@ export function BookingForm({
 
         {requestType === "booking" && (
           <div className="grid md:grid-cols-2 gap-5">
-            {/* Preferred Date Field (Required only for Bookings) */}
+            {/* Preferred Date Field (Popover Calendar) */}
             <div className="space-y-2">
               <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-                <Calendar className="h-3.5 w-3.5 text-accent" />
+                <CalendarIcon className="h-3.5 w-3.5 text-accent" />
                 Preferred Date <span className="text-accent">*</span>
               </label>
-              <input
-                type="date"
-                required
-                value={formData.bookDate}
-                onChange={(e) => setFormData((prev) => ({ ...prev, bookDate: e.target.value }))}
-                className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-md border border-input bg-card px-4 py-3.5 text-sm text-left transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none cursor-pointer"
+                  >
+                    <span className={formData.bookDate ? "text-foreground" : "text-muted-foreground"}>
+                      {formData.bookDate 
+                        ? format(new Date(formData.bookDate), "PPP") 
+                        : "Select preferred date"}
+                    </span>
+                    <CalendarIcon className="h-4 w-4 opacity-50 text-accent" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0 bg-card border border-border/80 shadow-2xl rounded-md" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={formData.bookDate ? new Date(formData.bookDate) : undefined}
+                    onSelect={(date) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        bookDate: date ? format(date, "yyyy-MM-dd") : "",
+                      }));
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
-            {/* Preferred Time Field */}
+            {/* Preferred Time Field (Three Inline Selects) */}
             <div className="space-y-2">
               <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
                 <Clock className="h-3.5 w-3.5 text-accent" />
                 Preferred Time
               </label>
-              <input
-                type="time"
-                value={formData.bookTime}
-                onChange={(e) => setFormData((prev) => ({ ...prev, bookTime: e.target.value }))}
-                className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
-              />
+              <div className="grid grid-cols-3 gap-2">
+                <Select
+                  value={timeState.hour}
+                  onValueChange={(h) => handleTimeChange("hour", h)}
+                >
+                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
+                    <SelectValue placeholder="Hour" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md max-h-[200px] overflow-y-auto">
+                    {HOURS.map((h) => (
+                      <SelectItem key={h} value={h} className="cursor-pointer hover:bg-accent/10">{h}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={timeState.minute}
+                  onValueChange={(m) => handleTimeChange("minute", m)}
+                >
+                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
+                    <SelectValue placeholder="Min" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md max-h-[200px] overflow-y-auto">
+                    {MINUTES.map((m) => (
+                      <SelectItem key={m} value={m} className="cursor-pointer hover:bg-accent/10">{m}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={timeState.period}
+                  onValueChange={(p) => handleTimeChange("period", p)}
+                >
+                  <SelectTrigger className="bg-card h-auto py-3.5 text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
+                    <SelectValue placeholder="AM/PM" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md">
+                    {PERIODS.map((p) => (
+                      <SelectItem key={p} value={p} className="cursor-pointer hover:bg-accent/10">{p}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         )}
