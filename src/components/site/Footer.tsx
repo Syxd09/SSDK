@@ -87,9 +87,6 @@ export function Footer() {
           <p className="mt-3 text-sm text-[#c8b8a0]">
             Preserving sacred traditions with absolute scriptural fidelity.
           </p>
-          <p className="mt-6 text-xs text-[#c8b8a0]/70">
-            Powered by EC-CUBE INFOTRONICS
-          </p>
         </div>
         <div className="flex items-start md:items-center md:h-full">
           <p className="text-xs tracking-[0.25em] uppercase text-[#c41e3a] font-medium whitespace-nowrap">
