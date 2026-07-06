@@ -1,71 +1,99 @@
 import { Link } from "@tanstack/react-router";
-import { Flame, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 
 export function Footer() {
-  return (
-    <footer className="mt-24 bg-primary text-primary-foreground">
-      {/* Top tagline bar */}
-      <div className="border-b border-primary-foreground/10">
-        <div className="container-x py-3 text-center text-xs tracking-[0.2em] uppercase text-primary-foreground/70">
-          Shastric Accuracy &bull; Vedic Lineage
-        </div>
-      </div>
+  const navItems = [
+    { label: "Home", to: "/" },
+    { label: "Rituals & Consultations", to: "/services" },
+    { label: "Our Lineage", to: "/about" },
+    { label: "Gallery", to: "/blog" },
+    { label: "Contact", to: "/contact" },
+  ];
 
-      <div className="container-x py-16 grid gap-12 md:grid-cols-4">
-        {/* Brand Column */}
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-full bg-accent text-primary">
-              <Flame className="h-5 w-5" />
-            </span>
-            <div>
-              <span className="font-serif text-xl block">Sri Shankara Dharmika Kendra</span>
-              <span className="text-xs text-primary-foreground/60 block mt-0.5">Authentic Vedic Rituals and Shastric Consultations</span>
+  return (
+    <footer className="mt-24 bg-[#150f0a] text-[#f0e6d6]">
+      {/* Top section */}
+      <div className="container-x pt-16 pb-10">
+        <div className="flex flex-col md:flex-row justify-between gap-12">
+          {/* Left — Brand */}
+          <div className="md:max-w-md">
+            <div className="w-10 h-1 bg-[#c41e3a] mb-5" />
+            <h2 className="font-serif text-3xl text-[#f0e6d6]">
+              Sri Shankara Dharmika Kendra
+            </h2>
+            <p className="mt-2 text-[#c8b8a0] text-sm">
+              Authentic Vedic Rituals and Shastric Consultations
+            </p>
+          </div>
+
+          {/* Right — Nav + Contact */}
+          <div className="md:text-right">
+            {/* Horizontal nav with dashes */}
+            <nav className="flex flex-wrap md:justify-end gap-x-1 gap-y-1 text-sm text-[#f0e6d6]">
+              {navItems.map((item, i) => (
+                <span key={item.to} className="inline-flex items-center">
+                  <Link to={item.to} className="hover:text-[#e8a84a] transition-colors">
+                    {item.label}
+                  </Link>
+                  {i < navItems.length - 1 && (
+                    <span className="mx-1.5 text-[#f0e6d6]/30">-</span>
+                  )}
+                </span>
+              ))}
+            </nav>
+
+            {/* Kendra Office + contacts */}
+            <div className="mt-8">
+              <p className="text-green-500 text-sm tracking-wider font-medium">
+                Kendra Office
+              </p>
+              <div className="mt-4 space-y-2 text-sm text-[#f0e6d6]">
+                <p>
+                  <a
+                    href="mailto:seenufeana@yahoo.in"
+                    className="underline underline-offset-2 hover:text-[#e8a84a] transition-colors"
+                  >
+                    seenufeana@yahoo.in
+                  </a>
+                </p>
+                <p>Bengaluru, Karnataka, India</p>
+                <p>Inquiries: +91 9844266816</p>
+                <p>
+                  WhatsApp:{" "}
+                  <a
+                    href="https://wa.me/919844266816"
+                    className="underline underline-offset-2 hover:text-[#e8a84a] transition-colors"
+                  >
+                    +91 9844266816
+                  </a>
+                </p>
+              </div>
             </div>
           </div>
-          <p className="mt-5 max-w-md text-sm text-primary-foreground/70 leading-relaxed">
-            Preserving sacred traditions with absolute scriptural fidelity.
-          </p>
-          <div className="mt-6 space-y-2 text-sm text-primary-foreground/80">
-            <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent" /> Inquiries: +91 9844266816</p>
-            <p className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-accent" /> WhatsApp: +91 9844266816</p>
-            <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> seenufeana@yahoo.in</p>
-            <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" /> Bengaluru, Karnataka, India</p>
-          </div>
-        </div>
-
-        {/* Navigation Column */}
-        <div>
-          <h4 className="font-serif text-lg mb-4 text-accent">Kendra Office</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li><Link to="/" className="hover:text-accent">Home</Link></li>
-            <li><Link to="/services" className="hover:text-accent">Rituals & Consultations</Link></li>
-            <li><Link to="/about" className="hover:text-accent">Our Lineage</Link></li>
-            <li><Link to="/blog" className="hover:text-accent">Gallery</Link></li>
-            <li><Link to="/contact" className="hover:text-accent">Contact</Link></li>
-          </ul>
-        </div>
-
-        {/* Legal Column */}
-        <div>
-          <h4 className="font-serif text-lg mb-4 text-accent">Legal</h4>
-          <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li><Link to="/privacy" className="hover:text-accent">Privacy Policy</Link></li>
-            <li><Link to="/terms" className="hover:text-accent">Terms of Service</Link></li>
-            <li><Link to="/refund" className="hover:text-accent">Refund Policy</Link></li>
-            <li><Link to="/sitemap" className="hover:text-accent">Sitemap</Link></li>
-          </ul>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-primary-foreground/10">
-        <div className="container-x py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-primary-foreground/60 text-center md:text-left">
-            &copy; 2026 Sri Shankara Dharmika Kendra. All rites reserved.
+      {/* Divider */}
+      <div className="container-x">
+        <div className="h-px bg-[#f0e6d6]/10" />
+      </div>
+
+      {/* Bottom section */}
+      <div className="container-x py-8 flex flex-col md:flex-row justify-between items-start gap-8">
+        <div>
+          <p className="text-sm text-[#f0e6d6] flex items-center gap-2">
+            <span className="inline-block w-2 h-2 bg-[#c41e3a] rounded-full" />
+            &copy; 2026 Sri Shankara Dharmika Kendra
           </p>
-          <p className="text-xs text-primary-foreground/50 text-center md:text-right">
+          <p className="mt-3 text-sm text-[#c8b8a0]">
+            Preserving sacred traditions with absolute scriptural fidelity.
+          </p>
+          <p className="mt-6 text-xs text-[#c8b8a0]/70">
             Powered by EC-CUBE INFOTRONICS
+          </p>
+        </div>
+        <div className="flex items-start md:items-center md:h-full">
+          <p className="text-xs tracking-[0.25em] uppercase text-[#c41e3a] font-medium whitespace-nowrap">
+            Shastric Accuracy &bull; Vedic Lineage
           </p>
         </div>
       </div>
