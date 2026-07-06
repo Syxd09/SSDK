@@ -23,6 +23,7 @@ const cats: Array<Service["category"] | "all"> = ["all", "rituals", "milestone",
 function ServicesPage() {
   const [filter, setFilter] = useState<Service["category"] | "all">("all");
   const [q, setQ] = useState("");
+  const [showFiltersMenu, setShowFiltersMenu] = useState(false);
 
   const filtered = services.filter((s) => {
     if (filter !== "all" && s.category !== filter) return false;
@@ -47,7 +48,42 @@ function ServicesPage() {
 
       <section className="container-x py-10 sticky top-20 z-30 bg-background/85 backdrop-blur-md border-b border-border/60">
         <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
-          <div className="flex flex-wrap gap-2">
+          
+          {/* Mobile Filter Toggle Accordion */}
+          <div className="md:hidden flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => setShowFiltersMenu((prev) => !prev)}
+              className="flex w-full items-center justify-between rounded-lg border border-input bg-card px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-primary cursor-pointer hover:bg-secondary transition-colors"
+            >
+              <span>Filter: {filter === "all" ? "All Categories" : categoryLabels[filter]}</span>
+              <span className="text-accent text-[10px]">{showFiltersMenu ? "▲" : "▼"}</span>
+            </button>
+            
+            {showFiltersMenu && (
+              <div className="flex flex-col gap-1.5 p-2 rounded-lg bg-secondary/40 border border-border/40 animate-fade-in">
+                {cats.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => {
+                      setFilter(c);
+                      setShowFiltersMenu(false);
+                    }}
+                    className={`text-left rounded-md px-4 py-2 text-xs font-medium uppercase tracking-wider transition-colors ${
+                      filter === c
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card text-primary hover:bg-accent"
+                    }`}
+                  >
+                    {c === "all" ? "All" : categoryLabels[c]}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Filter Inline List */}
+          <div className="hidden md:flex flex-wrap gap-2">
             {cats.map((c) => (
               <button
                 key={c}
@@ -62,6 +98,7 @@ function ServicesPage() {
               </button>
             ))}
           </div>
+
           <input
             type="search"
             value={q}
