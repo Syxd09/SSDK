@@ -7,7 +7,6 @@ const nav = [
   { to: "/services", label: "Rituals & Consultations" },
   { to: "/about", label: "Our Lineage" },
   { to: "/blog", label: "Gallery" },
-  { to: "/contact", label: "Contact & Inquiries" },
 ] as const;
 
 export function Header() {
