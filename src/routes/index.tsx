@@ -35,7 +35,7 @@ function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center animate-ken-burns"
           style={{
             backgroundImage:
               "url(https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/jJbK2p43YCuTCpmg/f1e9qx-PV1XxVNAFB9cEDwJ.png)",
