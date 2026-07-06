@@ -401,7 +401,7 @@ export function BookingForm({
           ) : (
             <>
               <span>
-                {requestType === "booking" ? "🪔 Submit Booking Request" : "🪔 Submit Inquiry / Query"}
+                {requestType === "booking" ? "Submit Booking Request" : "Submit Inquiry / Query"}
               </span>
             </>
           )}
