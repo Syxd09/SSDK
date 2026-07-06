@@ -2,6 +2,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Calendar, Clock, MapPin, MessageSquare, Phone, User, Sparkles, HelpCircle } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SERVICES_WINGS = [
   "Gruha Pravesam (Housewarming)",
@@ -156,27 +163,26 @@ export function BookingForm({
             <Sparkles className="h-3.5 w-3.5 text-accent" />
             Type of Service Needed <span className="text-accent">*</span>
           </label>
-          <select
+          <Select
             required
             value={formData.pujaType}
-            onChange={(e) => setFormData((prev) => ({ ...prev, pujaType: e.target.value }))}
-            className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none appearance-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23721655' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E")`,
-              backgroundPosition: "right 1rem center",
-              backgroundSize: "1.25rem",
-              backgroundRepeat: "no-repeat",
-            }}
+            onValueChange={(val) => setFormData((prev) => ({ ...prev, pujaType: val }))}
           >
-            <option value="" disabled>
-              Select Service Wing
-            </option>
-            {SERVICES_WINGS.map((wing) => (
-              <option key={wing} value={wing}>
-                {wing}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger className="w-full h-auto py-3.5 bg-card text-left focus:ring-2 focus:ring-accent/15 focus:border-accent">
+              <SelectValue placeholder="Select Service Wing" />
+            </SelectTrigger>
+            <SelectContent className="bg-card border border-border/80 shadow-2xl rounded-md max-h-[300px] overflow-y-auto">
+              {SERVICES_WINGS.map((wing) => (
+                <SelectItem 
+                  key={wing} 
+                  value={wing}
+                  className="cursor-pointer hover:bg-accent/15 focus:bg-accent/15 text-foreground py-2.5 transition-colors"
+                >
+                  {wing}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {requestType === "booking" && (
