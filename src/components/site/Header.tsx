@@ -29,17 +29,17 @@ export function Header() {
       }`}
     >
       <div className="container-x flex h-20 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2.5 group">
+        <Link to="/" className="flex items-center gap-3.5 group">
           <img
             src="/logo.png"
             alt="Sri Shankara Dharmika Kendra"
-            className="h-10 w-10 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
+            className="h-14 w-14 rounded-full object-cover shadow-md transition-transform group-hover:scale-105"
           />
           <span className="flex flex-col leading-tight">
-            <span className="font-serif text-lg font-semibold text-primary">
+            <span className="font-serif text-xl font-semibold text-primary">
               Sri Shankara
             </span>
-            <span className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground">
+            <span className="text-[11px] tracking-[0.22em] uppercase text-muted-foreground">
               Dharmika Kendra
             </span>
           </span>
