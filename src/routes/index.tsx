@@ -159,11 +159,17 @@ function Home() {
               { n: "100%", l: "Shastric Accuracy" },
               { n: "12+", l: "Lineage Priests" },
               { n: "1500+", l: "Rituals Completed" },
-            ].map((s) => (
-              <div key={s.l}>
+            ].map((s, i) => (
+              <motion.div
+                key={s.l}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.55, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <div className="font-serif text-5xl md:text-6xl text-accent">{s.n}</div>
                 <div className="mt-2 text-sm uppercase tracking-widest text-primary-foreground/70">{s.l}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
