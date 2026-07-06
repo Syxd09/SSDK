@@ -179,36 +179,38 @@ export function BookingForm({
           </select>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-5">
-          {/* Preferred Date Field (Required only for Bookings) */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-              <Calendar className="h-3.5 w-3.5 text-accent" />
-              Preferred Date {requestType === "booking" && <span className="text-accent">*</span>}
-            </label>
-            <input
-              type="date"
-              required={requestType === "booking"}
-              value={formData.bookDate}
-              onChange={(e) => setFormData((prev) => ({ ...prev, bookDate: e.target.value }))}
-              className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
-            />
-          </div>
+        {requestType === "booking" && (
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Preferred Date Field (Required only for Bookings) */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <Calendar className="h-3.5 w-3.5 text-accent" />
+                Preferred Date <span className="text-accent">*</span>
+              </label>
+              <input
+                type="date"
+                required
+                value={formData.bookDate}
+                onChange={(e) => setFormData((prev) => ({ ...prev, bookDate: e.target.value }))}
+                className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
+              />
+            </div>
 
-          {/* Preferred Time Field */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
-              <Clock className="h-3.5 w-3.5 text-accent" />
-              Preferred Time
-            </label>
-            <input
-              type="time"
-              value={formData.bookTime}
-              onChange={(e) => setFormData((prev) => ({ ...prev, bookTime: e.target.value }))}
-              className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
-            />
+            {/* Preferred Time Field */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <Clock className="h-3.5 w-3.5 text-accent" />
+                Preferred Time
+              </label>
+              <input
+                type="time"
+                value={formData.bookTime}
+                onChange={(e) => setFormData((prev) => ({ ...prev, bookTime: e.target.value }))}
+                className="w-full rounded-md border border-input bg-card px-4 py-3 text-sm transition-all focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Location Field (Required only for Bookings) */}
         <div className="space-y-2">
