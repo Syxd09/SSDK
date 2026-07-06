@@ -102,14 +102,21 @@ function Home() {
               { icon: Flame, title: "Sacred Homams", body: "Milestone fire rituals including Ayushya and Navagraha homams, executed with pure samagri and precise mantra intonations." },
               { icon: Sparkles, title: "Gruha Pravesam", body: "Complete housewarming ceremony management, covering Vastu Pooja, Punyahavachanam, and protective homams for your new home." },
               { icon: ShieldCheck, title: "Shastric Consultations", body: "Professional Astrology and Vaastu guidance rooted in classical Jyotisha texts, offering practical remedies without superstition." },
-            ].map((c) => (
-              <div key={c.title} className="rounded-xl border border-border/60 bg-card p-8 hover:shadow-lg transition-shadow">
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-accent mb-5">
+            ].map((c, i) => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-xl border border-border/60 bg-card p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              >
+                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-accent mb-5 transition-transform duration-500 hover:rotate-12">
                   <c.icon className="h-6 w-6" />
                 </span>
                 <h3 className="font-serif text-2xl text-primary">{c.title}</h3>
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{c.body}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
