@@ -35,7 +35,7 @@ function Home() {
       {/* HERO */}
       <section className="relative overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center animate-ken-burns"
           style={{
             backgroundImage:
               "url(https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1920,fit=crop/jJbK2p43YCuTCpmg/f1e9qx-PV1XxVNAFB9cEDwJ.png)",
@@ -102,14 +102,21 @@ function Home() {
               { icon: Flame, title: "Sacred Homams", body: "Milestone fire rituals including Ayushya and Navagraha homams, executed with pure samagri and precise mantra intonations." },
               { icon: Sparkles, title: "Gruha Pravesam", body: "Complete housewarming ceremony management, covering Vastu Pooja, Punyahavachanam, and protective homams for your new home." },
               { icon: ShieldCheck, title: "Shastric Consultations", body: "Professional Astrology and Vaastu guidance rooted in classical Jyotisha texts, offering practical remedies without superstition." },
-            ].map((c) => (
-              <div key={c.title} className="rounded-xl border border-border/60 bg-card p-8 hover:shadow-lg transition-shadow">
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-accent mb-5">
+            ].map((c, i) => (
+              <motion.div
+                key={c.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="rounded-xl border border-border/60 bg-card p-8 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              >
+                <span className="grid h-12 w-12 place-items-center rounded-full bg-primary text-accent mb-5 transition-transform duration-500 hover:rotate-12">
                   <c.icon className="h-6 w-6" />
                 </span>
                 <h3 className="font-serif text-2xl text-primary">{c.title}</h3>
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{c.body}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -152,11 +159,17 @@ function Home() {
               { n: "100%", l: "Shastric Accuracy" },
               { n: "12+", l: "Lineage Priests" },
               { n: "1500+", l: "Rituals Completed" },
-            ].map((s) => (
-              <div key={s.l}>
+            ].map((s, i) => (
+              <motion.div
+                key={s.l}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.55, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <div className="font-serif text-5xl md:text-6xl text-accent">{s.n}</div>
                 <div className="mt-2 text-sm uppercase tracking-widest text-primary-foreground/70">{s.l}</div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -169,16 +182,23 @@ function Home() {
           <h2 className="font-serif text-4xl md:text-5xl text-primary">Blessings from families we've served</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <blockquote key={t.name} className="rounded-xl border border-border/60 bg-card p-8 shadow-sm">
+          {testimonials.map((t, i) => (
+            <motion.blockquote
+              key={t.name}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="rounded-xl border border-border/60 bg-card p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
               <div className="flex text-accent mb-3">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
               </div>
               <p className="font-serif text-lg text-foreground leading-snug">"{t.quote}"</p>
               <footer className="mt-5 text-sm text-muted-foreground">
                 <strong className="text-primary">{t.name}</strong>, {t.city}
               </footer>
-            </blockquote>
+            </motion.blockquote>
           ))}
         </div>
       </section>
