@@ -182,16 +182,23 @@ function Home() {
           <h2 className="font-serif text-4xl md:text-5xl text-primary">Blessings from families we've served</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
-            <blockquote key={t.name} className="rounded-xl border border-border/60 bg-card p-8 shadow-sm">
+          {testimonials.map((t, i) => (
+            <motion.blockquote
+              key={t.name}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="rounded-xl border border-border/60 bg-card p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
               <div className="flex text-accent mb-3">
-                {Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-4 w-4 fill-current" />)}
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
               </div>
               <p className="font-serif text-lg text-foreground leading-snug">"{t.quote}"</p>
               <footer className="mt-5 text-sm text-muted-foreground">
                 <strong className="text-primary">{t.name}</strong>, {t.city}
               </footer>
-            </blockquote>
+            </motion.blockquote>
           ))}
         </div>
       </section>
